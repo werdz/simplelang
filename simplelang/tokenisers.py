@@ -3,13 +3,15 @@ Tokenisers that form part of the simplelang package.
 """
 import re
 
-_tag_regex = re.compile(r'^<[a-zA-Z0-9]+[^>]*>$')
+_tag_regex = re.compile(r'^<([a-zA-Z0-9]+)[^>]*>$')
 _empty_space_re = re.compile(r'^[ \r\n]*$')
 
 class Token:
 	def __init__(self, value):
-		if _tag_regex.match(value) is not None:
+		g = _tag_regex.match(value)
+		if g is not None:
 			self.token_type = 'html_tag'
+			self.tag_type = g.group(1)
 		else:
 			self.token_type = 'plain'
 		
@@ -69,3 +71,4 @@ def tokenise_html(raw_html):
 				in_tag = True
 			else:
 				token = token + raw_html[i]
+
