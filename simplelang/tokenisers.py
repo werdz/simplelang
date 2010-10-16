@@ -3,8 +3,9 @@ Tokenisers that form part of the simplelang package.
 """
 import re
 
-_tag_regex = re.compile(r'^<([a-zA-Z0-9]+)[^>]*>$')
-_empty_space_re = re.compile(r'^[ \r\n]*$')
+_tag_regex = re.compile(r'^</?([a-zA-Z0-9]+).*?/?>$')
+_closing_tag_regex = re.compile(r'^</')
+_empty_space_re = re.compile(r'^[ ,.\r\n]*$')
 
 class Token:
 	def __init__(self, value):
@@ -12,8 +13,14 @@ class Token:
 		if g is not None:
 			self.token_type = 'html_tag'
 			self.tag_type = g.group(1)
+			if _closing_tag_regex.match(value):
+				self.opening_tag = False
+			else:
+				self.opening_tag = True
 		else:
 			self.token_type = 'plain'
+			self.tag_type = None
+			self.opening_tag = None
 		
 		self.value = value
 	
@@ -21,7 +28,7 @@ class Token:
 		return self.value
 	
 	def __repr__(self):
-		return "<simplelang.tokenisers.Token(%s)>" % self.value
+		return "<simplelang.tokenisers.Token('%s', %s, %s, %s)>" % (self.value, self.token_type, self.tag_type, self.opening_tag)
 
 def tokenise_html(raw_html):
 	"""
@@ -34,7 +41,7 @@ def tokenise_html(raw_html):
 	in_tag_squote = False
 	token = ''
 	
-	separators = [" ", "\n"]
+	separators = [" ", "\n", ".", ","]
 	
 	for i in xrange(0, len(raw_html)):
 		if raw_html[i] in separators and _empty_space_re.match(token) is None and not in_tag:
