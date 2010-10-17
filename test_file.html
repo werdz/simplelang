@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-local" xml:lang="en-local">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <title>Linux: 2.6.34-rc4, &quot;Hunting A Really Annoying VM Regression&quot; | KernelTrap</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="/files/foundation_favicon.ico" type="image/x-icon" />
+ <link type="text/css" rel="stylesheet" media="all" href="/files/css/css_259b056e5724024716602f9592e74628.css" />
+ <script type="text/javascript" src="/files/js/js_fde24ce2164b1dc872140d8e018e0c28.js"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","user_relationships_ui":{"loadingimage":"\/sites\/default\/modules\/user_relationships\/user_relationships_ui\/images\/loadingAnimation.gif","savingimage":"\/sites\/default\/modules\/user_relationships\/user_relationships_ui\/images\/savingimage.gif","position":{"position":"absolute","left":"0","top":"0"}}});
+//--><!]]>
+</script>
+ <script type="text/javascript"> </script>
+</head>
+<body class="not-front not-logged-in page-node node-type-story one-sidebar sidebar-right" >
+
+  <div id="header">
+    <h1>
+            <a href="/"><img src="/files/foundation_logo.png" alt="Home" class="logo" /></a>
+      
+      
+          </h1>
+
+    
+    
+    <div id="block-block-11" class="block block-block">
+    <div class="title">login</div>
+  
+  <div class="content"><a href="/user/login">Login</a> / <a href="/user/register">Register</a></div>
+</div>
+
+<div id="block-search-0" class="block block-search">
+    <div class="title">Search</div>
+  
+  <div class="content"><form action="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression"  accept-charset="UTF-8" method="post" id="search-block-form">
+<div><div class="container-inline">
+  <div class="form-item" id="edit-search-block-form-1-wrapper">
+ <label for="edit-search-block-form-1">Search this site: </label>
+ <input type="text" maxlength="128" name="search_block_form" id="edit-search-block-form-1" size="15" value="" title="Enter the terms you wish to search for." class="form-text" />
+</div>
+<input type="submit" name="op" id="edit-submit-1" value="Search"  class="form-submit" />
+<input type="hidden" name="form_build_id" id="form-cfc1f54c65e9ab8fe404c347c220ad23" value="form-cfc1f54c65e9ab8fe404c347c220ad23"  />
+<input type="hidden" name="form_id" id="edit-search-block-form" value="search_block_form"  />
+</div>
+
+</div></form>
+</div>
+</div>
+
+<div id="block-block-12" class="block block-block">
+  
+  <div class="content"><p>&nbsp;<br />
+&nbsp;</p>
+</div>
+</div>
+
+  </div>
+
+  <!-- Navigation Lists -->
+  <div id="navcontainer">
+  <ul id="navlist">
+  <li><a href="/forum" title="Forums">Forums</a></li>
+  <li><a href="/news" title="News">News</a></li>
+  <!-- <li><div id="menu-jobs"><a href="/jobs" title="Jobs">Jobs</a></div></li> -->
+  <li><a href="/blogs" title="Blogs">Blogs</a></li>
+  <li><a href="/features" title="Features">Features</a></li>
+  <!-- <li><a href="/man" title="Man Pages">Man Pages</a></li> -->
+  <li><a href="/site" title="Site">Site</a></li>
+  </ul>
+  </div>
+
+
+  <div id="container" class="clear-block">
+    
+    <div id="page"><div class="wrapper">
+            <div class="breadcrumb"><a href="/">Home</a></div>      
+      
+      
+      
+            <h2 class="title">Linux: 2.6.34-rc4, &quot;Hunting A Really Annoying VM Regression&quot;</h2>
+      
+      
+      
+      <div id="node-56443" class="node node-story">
+  
+  
+    <div class="author">Submitted by <a href="/user/1" title="View user profile.">Jeremy</a></div>
+  <div class="date">on April 12, 2010 - 10:16pm</div>
+  
+  <div class="terms"><ul class="links inline"><li class="taxonomy_term_258 first"><a href="/-rc" rel="tag" title="">-rc</a></li>
+<li class="taxonomy_term_539"><a href="/taxonomy/term/539" rel="tag" title="">-rc4</a></li>
+<li class="taxonomy_term_4263"><a href="/taxonomy/term/4263" rel="tag" title="">2.6.34</a></li>
+<li class="taxonomy_term_4253"><a href="/taxonomy/term/4253" rel="tag" title="">Borislav Petkov</a></li>
+<li class="taxonomy_term_4273"><a href="/taxonomy/term/4273" rel="tag" title="">cxgb4</a></li>
+<li class="taxonomy_term_190"><a href="/Linus_Torvalds" rel="tag" title="">Linus Torvalds</a></li>
+<li class="taxonomy_term_187"><a href="/Linux" rel="tag" title="">Linux</a></li>
+<li class="taxonomy_term_4293"><a href="/taxonomy/term/4293" rel="tag" title="">nouveau</a></li>
+<li class="taxonomy_term_4283"><a href="/taxonomy/term/4283" rel="tag" title="">radeon</a></li>
+<li class="taxonomy_term_278"><a href="/taxonomy/term/278" rel="tag" title="">regressions</a></li>
+<li class="taxonomy_term_456"><a href="/taxonomy/term/456" rel="tag" title="">vm</a></li>
+<li class="taxonomy_term_2 last"><a href="/news/linux" rel="tag" title="">Linux news</a></li>
+</ul></div>
+
+  <div class="content"><p>"<em>It's been two weeks rather than the usual one, because we've been hunting a really annoying VM regression that not a lot of people seem to have seen, but I didn't want to release an -rc4 with it,</em>" <a href="http://kerneltrap.org/mailarchive/linux-kernel/2010/4/13/4558076">began Linux creator Linus Torvalds</a>, announcing the <a href="http://kerneltrap.org/mailarchive/git-commits-head/2010/4/13/31838">2.6.34-rc4</a> Linux kernel.  He explained, "<i>we had the choice of either reverting all the anon-vma scalability improvements, or finding out exactly what caused the regression and fixing it.  And we got pretty close to the point where I was going to just revert it all.</i>"  Linus continued:</p>
+<blockquote><p>"Absolutely _huge_ kudos to Borislav Petkov who reported the problem and was able to not just reliably reproduce it, but also test new patches to try to narrow things down at a moments notice. The thing took ten days of emails flying back and forth, and Borislav was there all the time, day and night, through several patches that tried to fix it (several real bugs, but not the one he hit) and lots of patches to just add instrumentation to get us nearer to the cause of the problem.  And finally, today, confirmation that we actually nailed the problem. So  if anybody has been seeing a oops (or sometimes a GP fault) in  page_referenced(), that should be gone now."</p></blockquote>
+<p>As for the rest of the changes, Linus noted, "<em>the bulk of the changes come from drivers - a new network driver (cxgb4), but also updates to the radeon and nouveau drivers.  And then there is the random updates everywhere.</em>"  Read on for the full changelog.</p>
+<p><div class="mailarchive-message" id="2-4558076"><pre></pre></div></p>
+</div>
+
+  <div class="links"><ul class="links inline"><li class="comment_add first last"><a href="/comment/reply/56443#comment-form" title="Share your thoughts and opinions related to this posting.">Add new comment</a></li>
+</ul></div>
+</div>
+
+<div id="comments">
+  <a id="comment-323723"></a>
+<div id="comment-323723" class="comment">
+    <h4 class="title">
+    <a href="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression#comment-323723" class="active">Great to see KernelTrap</a>      </h4>
+  
+  
+    <div class="author"><a href="http://frankgroeneveld.nl/" rel="nofollow">Frank Groeneveld</a> (not verified)</div>
+  <div class="on">on</div>
+  <div class="date">April 12, 2010 - 11:40pm</div>
+  
+  <div class="content"><p>Great to see KernelTrap active again! Kudos to you also :)</p>
+</div>
+
+  <div class="links"><ul class="links"><li class="comment_reply first last"><a href="/comment/reply/56443/323723">reply</a></li>
+</ul></div>
+</div>
+
+<div class="indented"><a id="comment-323743"></a>
+<div id="comment-323743" class="comment">
+    <h4 class="title">
+    <a href="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression#comment-323743" class="active">Yeah!</a>      </h4>
+  
+  
+    <div class="author"><a href="http://www.linuxbe.com" rel="nofollow">Jasper Nuyens</a> (not verified)</div>
+  <div class="on">on</div>
+  <div class="date">April 13, 2010 - 10:20am</div>
+  
+  <div class="content"><p>Hip hip horray for the resurrection of kerneltrap.org!</p>
+<p>Really gr8 that your back!<br />
+:):)</p>
+<p>Greetings,<br />
+Jasper.</p>
+</div>
+
+  <div class="links"><ul class="links"><li class="comment_reply first last"><a href="/comment/reply/56443/323743">reply</a></li>
+</ul></div>
+</div>
+
+</div><a id="comment-331203"></a>
+<div id="comment-331203" class="comment">
+    <h4 class="title">
+    <a href="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression#comment-331203" class="active">Thanks for the info, just in</a>      </h4>
+  
+  
+    <div class="author"><a href="http://seostream.ru/" rel="nofollow">Кирилл</a> (not verified)</div>
+  <div class="on">on</div>
+  <div class="date">May 31, 2010 - 9:41am</div>
+  
+  <div class="content"><p>Thanks for the info, just in time.</p>
+</div>
+
+  <div class="links"><ul class="links"><li class="comment_reply first last"><a href="/comment/reply/56443/331203">reply</a></li>
+</ul></div>
+</div>
+
+<a id="comment-331213"></a>
+<div id="comment-331213" class="comment">
+    <h4 class="title">
+    <a href="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression#comment-331213" class="active">Thanx!</a>      </h4>
+  
+  
+    <div class="author"><a href="http://www.acsy.te.ua" rel="nofollow">acsy</a> (not verified)</div>
+  <div class="on">on</div>
+  <div class="date">May 31, 2010 - 2:17pm</div>
+  
+  <div class="content"><p>Good post! I was looking for it ). Read with pleasure</p>
+</div>
+
+  <div class="links"><ul class="links"><li class="comment_reply first last"><a href="/comment/reply/56443/331213">reply</a></li>
+</ul></div>
+</div>
+
+<a id="comment-338721"></a>
+<div id="comment-338721" class="comment">
+    <h4 class="title">
+    <a href="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression#comment-338721" class="active">WWTmkpIVEUTEibCcfs</a>      </h4>
+  
+  
+    <div class="author"><a href="http://www.joshstricklandonline.com/auto.html" rel="nofollow">DazzleDoll</a> (not verified)</div>
+  <div class="on">on</div>
+  <div class="date">August 14, 2010 - 2:06pm</div>
+  
+  <div class="content"><p><a href="http://www.joshstricklandonline.com/health-insurance.html">health insurance</a> tnh</p>
+</div>
+
+  <div class="links"><ul class="links"><li class="comment_reply first last"><a href="/comment/reply/56443/338721">reply</a></li>
+</ul></div>
+</div>
+
+<a id="comment-339921"></a>
+<div id="comment-339921" class="comment">
+    <h4 class="title">
+    <a href="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression#comment-339921" class="active">rsDazyZpEVretKnY</a>      </h4>
+  
+  
+    <div class="author"><a href="http://www.cpmythbusters.net/autoinsurance.php" rel="nofollow">jeniferlack</a> (not verified)</div>
+  <div class="on">on</div>
+  <div class="date">August 19, 2010 - 1:27pm</div>
+  
+  <div class="content"><p><a href="http://www.cpmythbusters.net/autoinsurance.php">auto insurance</a> %-[[</p>
+</div>
+
+  <div class="links"><ul class="links"><li class="comment_reply first last"><a href="/comment/reply/56443/339921">reply</a></li>
+</ul></div>
+</div>
+
+<a id="comment-340905"></a>
+<div id="comment-340905" class="comment">
+    <h4 class="title">
+    <a href="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression#comment-340905" class="active">nZemdPqVieOJ</a>      </h4>
+  
+  
+    <div class="author"><a href="http://www.petetownshendisinnocent.com/accutane-prices.html" rel="nofollow">arcademod</a> (not verified)</div>
+  <div class="on">on</div>
+  <div class="date">August 27, 2010 - 1:58pm</div>
+  
+  <div class="content"><p><a href="http://www.petetownshendisinnocent.com/accutane-prices.html">buying accutane</a> bdobb</p>
+</div>
+
+  <div class="links"><ul class="links"><li class="comment_reply first last"><a href="/comment/reply/56443/340905">reply</a></li>
+</ul></div>
+</div>
+
+<a id="comment-348489"></a>
+<div id="comment-348489" class="comment">
+    <h4 class="title">
+    <a href="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression#comment-348489" class="active">greate work... really!</a>      </h4>
+  
+  
+    <div class="author"><a href="http://my-volga.ru/content/kak-okonchit-shkolu-eksternom" rel="nofollow">Olga64</a> (not verified)</div>
+  <div class="on">on</div>
+  <div class="date">October 12, 2010 - 11:29pm</div>
+  
+  <div class="content"><p>greate work...<br />
+<a href="http://my-volga.ru/content/kak-okonchit-shkolu-eksternom">externat</a></p>
+</div>
+
+  <div class="links"><ul class="links"><li class="comment_reply first last"><a href="/comment/reply/56443/348489">reply</a></li>
+</ul></div>
+</div>
+
+<form action="/Linux/2.6.34-rc4_Hunting_A_Really_Annoying_VM_Regression"  accept-charset="UTF-8" method="post" id="comment-controls">
+<div><div class="box">
+    <h3 class="title">Comment viewing options</h3>
+  
+  <div class="content"><div class="container-inline"><input type="hidden" name="form_build_id" id="form-38529007d5f4a4e144d52cbbe6f1c90a" value="form-38529007d5f4a4e144d52cbbe6f1c90a"  />
+<input type="hidden" name="form_id" id="edit-comment-controls" value="comment_controls"  />
+<div class="form-item" id="edit-mode-wrapper">
+ <select name="mode" class="form-select" id="edit-mode" ><option value="1">Flat list - collapsed</option><option value="2">Flat list - expanded</option><option value="3">Threaded list - collapsed</option><option value="4" selected="selected">Threaded list - expanded</option></select>
+</div>
+<div class="form-item" id="edit-order-wrapper">
+ <select name="order" class="form-select" id="edit-order" ><option value="1">Date - newest first</option><option value="2" selected="selected">Date - oldest first</option></select>
+</div>
+<div class="form-item" id="edit-comments-per-page-wrapper">
+ <select name="comments_per_page" class="form-select" id="edit-comments-per-page" ><option value="10">10 comments per page</option><option value="30">30 comments per page</option><option value="50" selected="selected">50 comments per page</option><option value="70">70 comments per page</option><option value="90">90 comments per page</option><option value="150">150 comments per page</option><option value="200">200 comments per page</option><option value="250">250 comments per page</option><option value="300">300 comments per page</option></select>
+</div>
+<input type="submit" name="op" id="edit-submit" value="Save settings"  class="form-submit" />
+</div><div class="description">Select your preferred way to display the comments and click "Save settings" to activate your changes.</div></div>
+</div>
+
+</div></form>
+</div>
+    </div></div>
+
+        <div id="right-sidebar" class="sidebar"><div id="block-author_pane-0" class="block block-author_pane">
+    <div class="title">Author Information</div>
+  
+  <div class="content">
+<div class="author-pane">
+ <div class="author-pane-inner">
+    <div class="author-pane-name-status author-pane-section">
+      <div class="author-pane-line author-name"> <a href="/user/1" title="View user profile.">Jeremy</a> </div>
+
+      
+              <div class="picture">
+  <a href="/user/1" title="View user profile."><img src="http://www.kerneltrap.org/files/pictures/picture-1.jpg" alt="Jeremy&#039;s picture" title="Jeremy&#039;s picture"  /></a></div>
+      
+      <div class="author-pane-line author-pane-online">
+        <span class="author-pane-online-icon"><img src="/sites/default/modules/author_pane/images/user-offline.png" alt="User offline. Last seen 2 weeks 2 days ago." title="User offline. Last seen 2 weeks 2 days ago." width="16" height="16" /></span>
+        <span class="author-pane-online-status">Offline</span>
+      </div>
+
+            
+      
+          </div>
+
+    <div class="author-pane-stats author-pane-section">
+              <div class="author-pane-line author-joined">
+          <span class="author-pane-label">Joined:</span> Oct 13 2001        </div>
+      
+      
+      
+          </div>
+
+    <div class="author-pane-admin author-pane-section">
+      
+      
+              
+    </div>
+
+    <div class="author-pane-contact author-pane-section">
+      
+      
+      
+            
+          </div>
+  </div>
+</div>
+</div>
+</div>
+
+<div id="block-user_relationship_blocks-user-3" class="block block-user_relationship_blocks">
+    <div class="title">Jeremy's friends</div>
+  
+  <div class="content"><div class="item-list"><ul><li class="first"><a href="/user/7167" title="View user profile.">strcmp</a></li>
+<li class="last"><a href="/user/2687" title="View user profile.">mariuz</a></li>
+</ul></div></div>
+</div>
+
+<div id="block-user-1" class="block block-user">
+    <div class="title">Navigation</div>
+  
+  <div class="content"><ul class="menu"><li class="collapsed first"><a href="/node/add">Create content</a></li>
+<li class="leaf"><a href="/mailarchive">Mailing list archives</a></li>
+<li class="leaf last"><a href="/tracker">Recent posts</a></li>
+</ul></div>
+</div>
+
+<div id="block-block-14" class="block block-block">
+  
+  <div class="content"><script type='text/javascript'> var ab_h = '8aa26477aad489ceb1b7f5b77c0ef554'; var ab_s = 'a43d276e40890adee87f8fdb259fb608';</script><script type='text/javascript' src='http://cdn1.adbard.net/js/ab2.js'></script></div>
+</div>
+
+<div id="block-block-4" class="block block-block">
+  
+  <div class="content"><center><small>Colocation donated by:</small><br /><a href="http://osuosl.org/"><img src="/files/pictures/thumbnail_small.gif" /></a></center></div>
+</div>
+
+<div id="block-node-0" class="block block-node">
+    <div class="title">Syndicate</div>
+  
+  <div class="content"><a href="/node/feed" class="feed-icon"><img src="/misc/feed.png" alt="Syndicate content" title="Syndicate" width="16" height="16" /></a></div>
+</div>
+
+</div>
+      </div>
+
+  <div id="footer">
+    <a href="">&copy; 2001-2009 KernelTrap.</a> &nbsp;|&nbsp; Powered by <a href="http://www.drupal.org/">Drupal</a>. &nbsp;|&nbsp; <a href="">Legal statement.</a>      </div>
+
+  <div id="user_relationships_popup_form" class="user_relationships_ui_popup_form"></div></body>
+</html>
+
+<br />
+<b>Warning</b>:  Duplicate entry &#039;2147483643&#039; for key 1
+query: INSERT INTO accesslog (title, path, url, hostname, uid, sid, timer, timestamp) values(&#039;&#039;, &#039;node/56443&#039;, &#039;&#039;, &#039;89.100.209.150&#039;, 0, &#039;414765ed801de643b57410db2dacf637&#039;, 16, 1287273826) in <b>/var/www/localhost/kerneltrap/includes/database.mysql.inc</b> on line <b>128</b><br />

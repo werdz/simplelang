@@ -18,5 +18,9 @@ def breaker_ratio(page, start_pos=0, end_pos=None):
 		else:
 			content_count = content_count + 1
 	
+	if tag_count + content_count <= 0:
+		return 0.0
+	
 	return float(tag_count) / float(tag_count + content_count)
+
 
