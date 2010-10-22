@@ -3,11 +3,11 @@
 # A script to test things as I write them. Don't pay much attention to it.
 
 import os
-
+import sys
 from optparse import OptionParser
 
 from simplelang.tokenisers import tokenise_html
-from simplelang.content import breaker_ratio
+from simplelang.content import breaker_ratio, is_breaker, find_content_blocks, classify_script
 
 def main():
 	parser = OptionParser()
@@ -18,20 +18,17 @@ def main():
 	f = open(options.file)
 	html_data = f.read()
 	f.close()
-
-	print "HTML file contents:"
-	print html_data
-	print
 	
-	tok_gen = tokenise_html(html_data)
-	page = []
-	for tok in tok_gen:
-		print repr(tok)
-		page.append(tok)
-
-	for i in xrange(0, len(page), 10):
-		print "Testing 0 to %i...%f" % (i, breaker_ratio(page, 0, i))
-		print "Testing %i to %i...%f" % (len(page) - i, len(page), breaker_ratio(page, len(page) - i, len(page)))
-
+	tokenised_page_gen = tokenise_html(html_data)
+	tokenised_page = classify_script(list(tokenised_page_gen))
+	blocks = find_content_blocks(tokenised_page)
+	
+	sorted_blocks = sorted(blocks, key=len, reverse=True)
+	
+	print sorted_blocks[0][0].meta
+	for i in xrange(0, len(sorted_blocks)):
+		for j in xrange(0, len(sorted_blocks[i])):
+			print sorted_blocks[i][j].meta
+	
 if __name__ == '__main__':
 	main()

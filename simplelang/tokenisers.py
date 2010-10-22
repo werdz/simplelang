@@ -3,6 +3,7 @@ Tokenisers that form part of the simplelang package.
 """
 import re
 
+_bangtag_regex = re.compile(r'^<!')
 _tag_regex = re.compile(r'^</?([a-zA-Z0-9]+).*?/?>$')
 _closing_tag_regex = re.compile(r'^</')
 _empty_space_re = re.compile(r'^[ ,.\r\n]*$')
@@ -23,6 +24,7 @@ class Token:
 			self.opening_tag = None
 		
 		self.value = value
+		self.meta = {}
 	
 	def __str__(self):
 		return self.value
