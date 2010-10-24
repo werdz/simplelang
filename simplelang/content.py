@@ -4,10 +4,11 @@ Things to analyse the content of a tokenised web page
 import re
 
 # these tags will be ignored when looking for big large blocks 
-_in_content_tags = ['p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'b', 'i', 'u', 'strong', 'ul', 'li', 'pre', 'blockquote', 'em', 'span']
+_in_content_tags = ['p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'b', 'i', 'u', 'strong', 'ul', 'li', 'pre', 'blockquote', 'em', 'span', 'br']
 
 script_re = re.compile(r'(?i)^script$')
 style_re = re.compile(r'(?i)^style$')
+anchor_re = re.compile(r'(?i)^a$')
 
 def is_breaker(tag):
 	return tag.token_type == 'html_tag' and tag.tag_type not in _in_content_tags
@@ -33,9 +34,10 @@ def breaker_ratio(page, start_pos=0, end_pos=None):
 def find_content_blocks(page):
 	blocks = []
 	current_block = []
+	
 	for token in page:
 		current_block.append(token)
-		if is_breaker(token) or 'script' in token.meta:
+		if is_breaker(token) or 'script' in token.meta or 'style' in token.meta:
 			blocks.append(current_block)
 			current_block = []
 	return blocks

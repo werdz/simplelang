@@ -8,7 +8,7 @@ from optparse import OptionParser
 
 from simplelang.tokenisers import tokenise_html
 from simplelang.content import *
-
+from simplelang.util import *
 def main():
 	parser = OptionParser()
 	
@@ -22,12 +22,12 @@ def main():
 	tokenised_page_gen = tokenise_html(html_data)
 	tokenised_page = classify_block(list(tokenised_page_gen), 'script', script_re)
 	tokenised_page = classify_block(tokenised_page, 'style', style_re)
+	tokenised_page = classify_block(tokenised_page, 'a', anchor_re)
 	blocks = find_content_blocks(tokenised_page)
 	
 	sorted_blocks = sorted(blocks, key=len, reverse=True)
 	
-	
-	print [str(x) for x in sorted_blocks[0]]
+	print content_block_str(sorted_blocks[0])
 
 if __name__ == '__main__':
 	main()
