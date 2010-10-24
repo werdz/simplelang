@@ -47,18 +47,13 @@ def classify_script(page):
 		if page[i].token_type == 'html_tag' and _script_re.match(page[i].tag_type) is not None:
 			if page[i].opening_tag is True:
 				script_open = True
-				#print "Token is %s, opening script_open" % repr(page[i])
 				in_js.append(i)
 			else:
-				#print "Token is %s, closing script_open" % repr(page[i])
 				script_open = False
 				for index in in_js:
 					page[index].meta['script'] = True
 				in_js = []
 		elif script_open is True:
 			in_js.append(i)
-			#print "Token is %s, script_open set" % repr(page[i])
-		#else:
-		#	print "Token is %s, script_open not set" % repr(page[i])
 	
 	return page
