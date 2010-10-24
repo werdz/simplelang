@@ -25,10 +25,10 @@ def main():
 	
 	sorted_blocks = sorted(blocks, key=len, reverse=True)
 	
-	print sorted_blocks[0][0].meta
-	for i in xrange(0, len(sorted_blocks)):
-		for j in xrange(0, len(sorted_blocks[i])):
-			print sorted_blocks[i][j].meta
 	
+	print [str(x) for x in sorted_blocks[0]]
+	#for x in tokenised_page:
+	#	print x.tag_type
+
 if __name__ == '__main__':
 	main()

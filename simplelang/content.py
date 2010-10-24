@@ -4,9 +4,9 @@ Things to analyse the content of a tokenised web page
 import re
 
 # these tags will be ignored when looking for big large blocks 
-_in_content_tags = ['p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'b', 'i', 'u', 'strong', 'ul', 'li', 'pre', 'blockquote']
-_script_re = re.compile(r'(?i)script')
-_style_re = re.compile(r'(?i)style')
+_in_content_tags = ['p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'b', 'i', 'u', 'strong', 'ul', 'li', 'pre', 'blockquote', 'em', 'span']
+_script_re = re.compile(r'(?i)^script$')
+_style_re = re.compile(r'(?i)^style$')
 
 def is_breaker(tag):
 	return tag.token_type == 'html_tag' and tag.tag_type not in _in_content_tags
@@ -37,23 +37,28 @@ def find_content_blocks(page):
 		if is_breaker(token) or 'script' in token.meta:
 			blocks.append(current_block)
 			current_block = []
-	
 	return blocks
 
 def classify_script(page):
 	in_js = []
-	script_open = True
+	script_open = False
 	
 	for i in xrange(0, len(page)):
 		if page[i].token_type == 'html_tag' and _script_re.match(page[i].tag_type) is not None:
 			if page[i].opening_tag is True:
 				script_open = True
+				#print "Token is %s, opening script_open" % repr(page[i])
+				in_js.append(i)
 			else:
+				#print "Token is %s, closing script_open" % repr(page[i])
 				script_open = False
 				for index in in_js:
-					page[i].meta['script'] = True
+					page[index].meta['script'] = True
 				in_js = []
 		elif script_open is True:
-			in_js.append(i)			
+			in_js.append(i)
+			#print "Token is %s, script_open set" % repr(page[i])
+		#else:
+		#	print "Token is %s, script_open not set" % repr(page[i])
 	
 	return page
