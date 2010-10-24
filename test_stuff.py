@@ -7,7 +7,7 @@ import sys
 from optparse import OptionParser
 
 from simplelang.tokenisers import tokenise_html
-from simplelang.content import breaker_ratio, is_breaker, find_content_blocks, classify_script
+from simplelang.content import *
 
 def main():
 	parser = OptionParser()
@@ -20,7 +20,8 @@ def main():
 	f.close()
 	
 	tokenised_page_gen = tokenise_html(html_data)
-	tokenised_page = classify_script(list(tokenised_page_gen))
+	tokenised_page = classify_block(list(tokenised_page_gen), 'script', script_re)
+	tokenised_page = classify_block(tokenised_page, 'style', style_re)
 	blocks = find_content_blocks(tokenised_page)
 	
 	sorted_blocks = sorted(blocks, key=len, reverse=True)

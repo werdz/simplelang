@@ -5,8 +5,9 @@ import re
 
 # these tags will be ignored when looking for big large blocks 
 _in_content_tags = ['p', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'b', 'i', 'u', 'strong', 'ul', 'li', 'pre', 'blockquote', 'em', 'span']
-_script_re = re.compile(r'(?i)^script$')
-_style_re = re.compile(r'(?i)^style$')
+
+script_re = re.compile(r'(?i)^script$')
+style_re = re.compile(r'(?i)^style$')
 
 def is_breaker(tag):
 	return tag.token_type == 'html_tag' and tag.tag_type not in _in_content_tags
@@ -39,19 +40,19 @@ def find_content_blocks(page):
 			current_block = []
 	return blocks
 
-def classify_script(page):
+def classify_block(page, meta_note, block_tag_re):
 	in_js = []
 	script_open = False
 	
 	for i in xrange(0, len(page)):
-		if page[i].token_type == 'html_tag' and _script_re.match(page[i].tag_type) is not None:
+		if page[i].token_type == 'html_tag' and block_tag_re.match(page[i].tag_type) is not None:
 			if page[i].opening_tag is True:
 				script_open = True
 				in_js.append(i)
 			else:
 				script_open = False
 				for index in in_js:
-					page[index].meta['script'] = True
+					page[index].meta[meta_note] = True
 				in_js = []
 		elif script_open is True:
 			in_js.append(i)
