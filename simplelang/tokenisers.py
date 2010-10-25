@@ -5,9 +5,10 @@ import re
 
 _bangtag_regex = re.compile(r'^<!')
 _tag_regex = re.compile(r'^</?([a-zA-Z0-9]+).*?/?>$')
+_entity_regex = re.compile(r'^&([a-zA-Z]+|#[0-9]+);$')
 _closing_tag_regex = re.compile(r'^</')
-_empty_space_re = re.compile(r'^[ ,.\r\n]*$')
-
+_empty_space_re = re.compile(r'^[ ,.\r\t\n]*$')
+_
 class Token:
 	def __init__(self, value):
 		g = _tag_regex.match(value)
@@ -41,6 +42,7 @@ def tokenise_html(raw_html):
 	in_tag = False
 	in_tag_dquote = False
 	in_tag_squote = False
+	in_entity = False
 	token = ''
 	
 	separators = [" ", "\n", ".", ","]

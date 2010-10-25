@@ -28,6 +28,7 @@ def main():
 	sorted_blocks = sorted(blocks, key=len, reverse=True)
 	
 	print content_block_str(sorted_blocks[0])
+	print sorted(word_frequencies(filter_common_words(sorted_blocks[0])), key=lambda x:x[1], reverse=True)
 
 if __name__ == '__main__':
 	main()
